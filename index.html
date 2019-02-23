@@ -4,10 +4,19 @@
     <meta charset="utf-8">
     <script src="/socket.io/socket.io.js"></script>
     <script type="module" src="index.js"></script>
+    <link rel="stylesheet" href="styles.css">
     <title>ES6 chat app without transpiling</title>
 </head>
 <body>
     <h2>Chat</h2>
-    <input type="text" id="username">
+    <h3 id="userId"></h3>
+    <div class="chat-window">
+        <div id="messageQueue" class="messageQueue"></div>
+        <form id="messageForm">
+            <input type="text" id="username" placeholder="Anonymus">
+            <input type="text" id="message" class="message">
+            <input type="submit" id="submit" value="Send message" />
+        </form>
+    </div>
 </body>
 </html>

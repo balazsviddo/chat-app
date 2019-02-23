@@ -1,0 +1,28 @@
+.chat-window {
+    width: 500px;
+    border: 1px solid black;
+    padding: 20px;
+}
+.messageQueue {
+    margin: 20px 0;
+    height: 300px;
+    overflow-y: scroll;
+}
+.message {
+    width: 250px;
+}
+
+form {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.floatLeft {
+    width: 100%;
+    text-align: left;
+}
+.floatRight {
+    width: 100%;
+    text-align: right;
+}
