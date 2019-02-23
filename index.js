@@ -1,25 +1,33 @@
+const SOCKET_URL = "http://185.13.90.140:8081";
 let currentUser;
-document.addEventListener('DOMContentLoaded', () => {
-    const userHashId = IDGenerator();
-    currentUser = new IoClient(userHashId);
-    document.getElementById("userId").innerHTML = currentUser.userId;
+
+document.addEventListener("DOMContentLoaded", () => {
+    currentUser = new IoClient();
 });
 
-let messageForm = document.getElementById('messageForm');
-messageForm.addEventListener('submit', (e) => {
+let messageForm = document.getElementById("messageForm");
+messageForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const userName = document.getElementById('username').value;
-    const message = document.getElementById('message').value;
-    currentUser.sendMessage(userName, message);
+    const userName = document.getElementById("username").value;
+    const message = document.getElementById("message").value;
+    const formErrors = document.getElementById("formErrors");
+    const errorMessage = validateForm(userName, message);
+    if (!errorMessage) {
+        currentUser.sendMessage(userName, message);
+        formErrors.style.display = "none";
+        formErrors.innerText = "";
+    } else {
+        formErrors.style.display = "initial";
+        formErrors.innerText = errorMessage;
+    }
 });
 
 class IoClient {
-    constructor(userId) {
-        this.socket = io.connect("http://185.13.90.140:8081", {
+    constructor() {
+        this.socket = io.connect(SOCKET_URL, {
             forceNew: true
         });
-        this.userId = userId;
-        this.socket.on('message', (data) => {
+        this.socket.on("message", (data) => {
             appendMessage(data);
         })
     }
@@ -29,20 +37,18 @@ class IoClient {
             message: message
         };
         if (this.socket) {
-            this.socket.emit('message', messagePayload);
+            this.socket.emit("message", messagePayload);
         }
     };
 }
 
-const IDGenerator = () => {
-    return Math.random().toString(36).substr(2, 5).toLocaleUpperCase();
-};
-
 const appendMessage = (data) => {
     const message = document.createElement("div");
+    message.classList.add("chatMessage");
     let messageText;
     if (data.user === "echoBot2000") {
-        messageText = document.createTextNode(`${data.message}`);
+        const onlyMessage = data.message.match(/content: (.*)/)[1];
+        messageText = document.createTextNode(`${onlyMessage}`);
         message.classList.add("floatRight");
     } else {
         messageText = document.createTextNode(`${data.user} : ${data.message}`);
@@ -51,4 +57,10 @@ const appendMessage = (data) => {
     message.appendChild(messageText);
     document.getElementById("messageQueue").appendChild(message);
     message.scrollIntoView();
+};
+
+const validateForm = (userName, message) => {
+  if (userName && message) return null;
+  if (!userName) return "Please enter a username to send message";
+  if (!message) return "Unable to send empty messages";
 };
