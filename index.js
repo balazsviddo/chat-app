@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
     currentUser = new IoClient();
 });
 
+// submit message form, append error message above form
+
 let messageForm = document.getElementById("messageForm");
 messageForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -21,6 +23,8 @@ messageForm.addEventListener("submit", (e) => {
         formErrors.innerText = errorMessage;
     }
 });
+
+// socket IO client class, instance created on DOMContentLoaded event
 
 class IoClient {
     constructor() {
@@ -42,6 +46,8 @@ class IoClient {
     };
 }
 
+// append the received message to the message queue
+
 const appendMessage = (data) => {
     const message = document.createElement("div");
     message.classList.add("chatMessage");
@@ -58,6 +64,8 @@ const appendMessage = (data) => {
     document.getElementById("messageQueue").appendChild(message);
     message.scrollIntoView();
 };
+
+// form validation: do not send if no message or username
 
 const validateForm = (userName, message) => {
   if (userName && message) return null;
